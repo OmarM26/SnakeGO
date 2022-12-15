@@ -208,9 +208,16 @@ func main() {
 	// Goroutines serpientes
 	ch := make(chan byte)
 	for i := 0; i < cantSerp; i++ {
+		w.Add(1)
 		go func(i int, co chan byte) {
-			//Movimiento serpiente
+			// Movimiento serpiente
 			for {
+				// Deadlock
+				if list[i].lost {
+					for true {
+					}
+				}
+				// Movimientos
 				last := int(len(list[i].Cola) - 1)
 				time.Sleep(time.Millisecond * time.Duration(100))
 				if posComida.X > list[i].Cola[last].X {
@@ -254,17 +261,13 @@ func main() {
 						}
 					}
 				}
-				//Deadlock
-				if list[i].lost {
-					for true {
-					}
-				}
 			}
 		}(i, ch)
+
 	}
 	// Ejecucion del Juego
 	for {
-		// Direccion serpiente
+		// Direccion Serpiente
 		select {
 		case stdin, _ := <-ch:
 			Dir = stdin
@@ -274,10 +277,10 @@ func main() {
 				time.Sleep(time.Millisecond * time.Duration(vel))
 			}
 		}
-		// Imprimir pasos de la grilla
+		// Imprimir pasos de la Grilla
 		time.Sleep(time.Millisecond * time.Duration(200))
 		fmt.Println(grilla)
-		// Verificar fin del juego
+		// Verificar fin del Juego
 		contar_Muertas := 0
 		for i := 0; i < len(list); i++ {
 			if list[i].lost == true {
