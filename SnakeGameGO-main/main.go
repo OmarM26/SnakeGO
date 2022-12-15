@@ -208,7 +208,6 @@ func main() {
 	// Goroutines serpientes
 	ch := make(chan byte)
 	for i := 0; i < cantSerp; i++ {
-		w.Add(1)
 		go func(i int, co chan byte) {
 			//Movimiento serpiente
 			for {
@@ -272,7 +271,7 @@ func main() {
 			verificar()
 			for i := 0; i < len(list); i++ {
 				actualizarGrilla(grilla, &list[i])
-				time.Sleep(time.Millisecond * time.Duration(100))
+				time.Sleep(time.Millisecond * time.Duration(vel))
 			}
 		}
 		// Imprimir pasos de la grilla
