@@ -9,12 +9,10 @@ Cada serpiente se desplaza de forma autónoma intentando llegar primero que las 
 Cada vez que una serpiente alcance el alimento, ésta crecerá y, a la vez, deberá surgir una nueva porción de comida en otra celda (definida aleatoriamente).
 Cada 'x' segundos cada serpiente se mueve una celda.
 El juego debe continuar hasta que las serpientes no puedan seguir moviéndose.
-
 // REGLAS CON CONCURRENCIA:
 Las serpientes deben ser representadas por un Thread (liviano o pesado) independiente (con exclusion mutua).
 Si una serpiente no puede moverse entra a deadlock permanente (o momentaneo).
 El programa debe ser tan asíncrono y libre de barreras de sincronización como sea posible.
-
 // GRILLA:
 Defina un mecanismo que permita observar los diferentes estados de las serpientes en la grilla.
 */
@@ -93,19 +91,6 @@ func colocarComida(grilla MyGrilla) {
 	grilla[x][y] = "◈"
 	posComida.X = x
 	posComida.Y = y
-}
-
-func posicionInicialSerpientes(grilla MyGrilla, list []Snake) {
-	var s Snake
-
-	s.lost = false
-	time.Sleep(time.Millisecond * time.Duration(100))
-	rand.Seed(time.Now().UnixNano())
-	serpX, serpY := rand.Intn(int(ancho-1)), rand.Intn(int(largo-1))
-	s.agregarCola(Coords{serpX, serpY + 1})
-	grilla[serpX][serpY+1] = "□"
-	// SE AGREGA LA SERPIENTE A LA VARIABLE LIST
-	list = append(list, s)
 }
 
 // 0 arriba;		1 abajo;	2 izquierda;	3 derecha
@@ -198,7 +183,16 @@ func main() {
 	}
 	for i := 0; i <= int(cant_snake); i++ {
 		// LA POSICIÓN DE LA SERPIENTE NO DEBE CREAR UNA NUEVA GRILLA
-		posicionInicialSerpientes(grilla, list)
+		var s Snake
+
+		s.lost = false
+		time.Sleep(time.Millisecond * time.Duration(100))
+		rand.Seed(time.Now().UnixNano())
+		serpX, serpY := rand.Intn(int(ancho-1)), rand.Intn(int(largo-1))
+		s.agregarCola(Coords{serpX, serpY + 1})
+		grilla[serpX][serpY+1] = "□"
+		// SE AGREGA LA SERPIENTE A LA VARIABLE LIST
+		list = append(list, s)
 	}
 	//Inicializar serpientes.
 	for i := 0; i < int(cant_snake); i++ {
